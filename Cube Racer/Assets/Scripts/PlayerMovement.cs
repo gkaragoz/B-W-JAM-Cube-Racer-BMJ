@@ -29,6 +29,14 @@ public class PlayerMovement : MonoBehaviour
             _inputDirection = new Vector3(horizontal, 0f, vertical);
         else if (SideCalculator.Instance.Area == "F_Center")
             _inputDirection = new Vector3(0f, -1 * horizontal, vertical);
+        else if (SideCalculator.Instance.Area == "B_Center")
+            _inputDirection = new Vector3(horizontal, vertical, 0f);
+        else if (SideCalculator.Instance.Area == "D_Center")
+            _inputDirection = new Vector3(-1 * vertical, -1 * horizontal, 0f);
+        else if (SideCalculator.Instance.Area == "E_Center")
+            _inputDirection = new Vector3(0f, vertical, -1 * horizontal);
+        else if (SideCalculator.Instance.Area == "A_Center")
+            _inputDirection = new Vector3(-1 * vertical, 0f, -1 * horizontal);
 
         // Player rotation reset.
         transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -62,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
                 distance = other.transform.position.WithY(0) - transform.position.WithY(0);
             else if (connectionTrigger.AffectAxis == "Z")
                 distance = other.transform.position.WithZ(0) - transform.position.WithZ(0);
+            else if (connectionTrigger.AffectAxis == "YZ")
+                distance = other.transform.position.With(other.transform.position.x, 0f, 0f) - transform.position.With(transform.position.x, 0f, 0f);
+            else if (connectionTrigger.AffectAxis == "YX")
+                distance = other.transform.position.With(0f, 0f, other.transform.position.z) - transform.position.With(0f, 0f, transform.position.z);
 
             var minValue = 0.5f;
             var maxValue = 0f;
@@ -77,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             var newAngleY = 0f;
             var newAngleZ = 0f;
 
-            if (SideCalculator.Instance.Area == "C_Center")
+            if (SideCalculator.Instance.Area == "C_Center" && (connectionTrigger.ToSide == "F_Center" || connectionTrigger.ToSide == "B_Center"))
             {
                 minValue = 0.5f;
                 maxValue = 0f;
@@ -86,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
                 newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAngleHalf.y);
                 newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAngleHalf.z);
             }
-            else if (SideCalculator.Instance.Area == "F_Center")
+            else if (SideCalculator.Instance.Area == "F_Center" && connectionTrigger.ToSide == "C_Center")
             {
                 minValue = 0f;
                 maxValue = 0.5f;
@@ -94,6 +106,87 @@ public class PlayerMovement : MonoBehaviour
                 newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
                 newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.y, connectionTrigger.AngleB.y);
                 newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.z, connectionTrigger.AngleB.z);
+            }
+            else if (SideCalculator.Instance.Area == "F_Center" && connectionTrigger.ToSide == "D_Center")
+            {
+                minValue = 0.5f;
+                maxValue = 0f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAngleHalf.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAngleHalf.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAngleHalf.z);
+            }
+            else if (SideCalculator.Instance.Area == "D_Center" && connectionTrigger.ToSide == "F_Center")
+            {
+                minValue = 0f;
+                maxValue = 0.5f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.y, connectionTrigger.AngleB.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.z, connectionTrigger.AngleB.z);
+            }
+            else if (SideCalculator.Instance.Area == "B_Center" && connectionTrigger.ToSide == "E_Center")
+            {
+                minValue = 0.5f;
+                maxValue = 0f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAngleHalf.x);
+                newAngleY = -90f;
+                newAngleZ = -90f;
+            }
+            else if (SideCalculator.Instance.Area == "B_Center" && connectionTrigger.ToSide == "C_Center")
+            {
+                minValue = 0f;
+                maxValue = 0.5f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.y, connectionTrigger.AngleB.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.z, connectionTrigger.AngleB.z);
+            }
+            else if (SideCalculator.Instance.Area == "E_Center" && connectionTrigger.ToSide == "B_Center")
+            {
+                minValue = 0f;
+                maxValue = 0.5f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
+                newAngleY = -90f;
+                newAngleZ = -90f;
+            }
+            else if (SideCalculator.Instance.Area == "E_Center" && connectionTrigger.ToSide == "A_Center")
+            {
+                minValue = 0.5f;
+                maxValue = 0f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAngleHalf.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAngleHalf.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAngleHalf.z);
+            }
+            else if (SideCalculator.Instance.Area == "A_Center" && connectionTrigger.ToSide == "E_Center")
+            {
+                minValue = 0f;
+                maxValue = 0.5f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.y, connectionTrigger.AngleB.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.z, connectionTrigger.AngleB.z);
+            }
+            else if (SideCalculator.Instance.Area == "A_Center" && connectionTrigger.ToSide == "D_Center")
+            {
+                minValue = 0.5f;
+                maxValue = 0f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAngleHalf.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAngleHalf.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAngleHalf.z);
+            }
+            else if (SideCalculator.Instance.Area == "D_Center" && connectionTrigger.ToSide == "A_Center")
+            {
+                minValue = 0f;
+                maxValue = 0.5f;
+
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.CornerAngleHalf.x, connectionTrigger.AngleB.x);
+                newAngleY = -90f;
+                newAngleZ = -180f;
             }
 
             _targetCubeRotation = Quaternion.Euler(new Vector3(newAngleX, newAngleY, newAngleZ));

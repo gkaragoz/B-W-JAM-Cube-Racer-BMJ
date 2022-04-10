@@ -43,7 +43,5 @@ public class SideCalculator : MonoBehaviour
         }
 
         Area = _sideTransforms[closestIndex].name;
-
-        Debug.LogWarning(Area);
     }
 }

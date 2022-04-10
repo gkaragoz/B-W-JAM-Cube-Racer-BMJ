@@ -13,8 +13,11 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Cube Properties")]
     [SerializeField] private float _cubeRotationSpeed = 2f;
+    [SerializeField] private float _cubeRotationThreshold = 0.01f;
+    private float _previousDistance = 0f;
 
     private Quaternion _targetCubeRotation;
+    private Vector3 _inputDirection;
 
     private void Update()
     {
@@ -22,18 +25,21 @@ public class PlayerMovement : MonoBehaviour
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
 
-        var direction = new Vector3(horizontal, 0f, vertical);
+        _inputDirection = new Vector3(horizontal, 0f, vertical);
+
+        // Player rotation reset.
+        transform.rotation = Quaternion.Euler(Vector3.zero);
 
         // Cube
-        _cubeTransform.localRotation = Quaternion.Slerp(_cubeTransform.localRotation, _targetCubeRotation, _cubeRotationSpeed * Time.deltaTime);
-
-        // Player
-        Vector3 worldVector = _cubeTransform.TransformVector(direction);
-        _rb.velocity = Vector3.Slerp(_rb.velocity, worldVector * _movementSpeed, _acceleration);
+        _cubeTransform.localRotation = Quaternion.Slerp(_cubeTransform.localRotation, _targetCubeRotation, _cubeRotationSpeed);
     }
 
     private void FixedUpdate()
     {
+        // Player
+        Vector3 worldVector = _cubeTransform.TransformVector(_inputDirection);
+        _rb.velocity = worldVector * _movementSpeed;
+
         if (_rb.velocity.magnitude > _maxSpeed)
             _rb.velocity = _rb.velocity.normalized * _maxSpeed;
     }
@@ -56,9 +62,31 @@ public class PlayerMovement : MonoBehaviour
 
             var distanceMagnitude = Mathf.Clamp(distance.magnitude, maxValue, minValue);
 
-            var newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.Angle.x);
-            var newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.Angle.y);
-            var newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.Angle.z);
+            if (Mathf.Abs(_previousDistance - distance.magnitude) < _cubeRotationThreshold)
+                return;
+
+            _previousDistance = distance.magnitude;
+
+            var newAngleX = 0f;
+            var newAngleY = 0f;
+            var newAngleZ = 0f;
+
+            if (SideCalculator.Instance.Area == "F_Center")
+            {
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAnglePart2.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAnglePart2.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAnglePart2.z);
+            }
+            else if (SideCalculator.Instance.Area == "C_Center")
+            {
+                newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAnglePart1.x);
+                newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAnglePart1.y);
+                newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAnglePart1.z);
+            }
+
+            newAngleX = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.x, connectionTrigger.CornerAnglePart1.x);
+            newAngleY = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.y, connectionTrigger.CornerAnglePart1.y);
+            newAngleZ = ExtensionMethods.Map(distanceMagnitude, minValue, maxValue, connectionTrigger.AngleA.z, connectionTrigger.CornerAnglePart1.z);
 
             _targetCubeRotation = Quaternion.Euler(new Vector3(newAngleX, newAngleY, newAngleZ));
         }

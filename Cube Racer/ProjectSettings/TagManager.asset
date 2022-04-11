@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Connection
   - Side
-  - StartFinshArea
   layers:
   - Default
   - TransparentFX

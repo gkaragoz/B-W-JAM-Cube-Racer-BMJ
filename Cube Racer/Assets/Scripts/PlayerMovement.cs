@@ -57,6 +57,12 @@ public class PlayerMovement : MonoBehaviour
             _rb.velocity = _rb.velocity.normalized * _maxSpeed;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name.Equals("StartFinishArea"))
+            LapChecker.Instance.ReachToFinish("StartFinishArea");
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Connection")) {

@@ -94,9 +94,9 @@ public class TimeTracker : MonoBehaviour
         var passedTimeInSeconds = GetTimeInSeconds();
         var passedTimeInMilliseconds = GetTimeInMilliseconds();
 
-        _currentMap.PreviousTimeSeconds = passedTimeInMinutes;
+        _currentMap.PreviousTimeMinutes = passedTimeInMinutes;
         _currentMap.PreviousTimeSeconds = passedTimeInSeconds;
-        _currentMap.PreviousTimeSeconds = passedTimeInMilliseconds;
+        _currentMap.PreviousTimeMilliseconds = passedTimeInMilliseconds;
 
         _currentMap.CurrentTimeMinutes = passedTimeInMinutes;
         _currentMap.CurrentTimeSeconds = passedTimeInSeconds;

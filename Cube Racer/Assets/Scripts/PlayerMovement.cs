@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform _cubeTransform;
 
+    [SerializeField] private Animator _animator;
+    
     [SerializeField] private float _movementSpeed = 1f;
     [SerializeField] private Rigidbody _rb = null;
 
@@ -23,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
         // Input
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
+        
+        _animator.SetFloat("Horizontal", horizontal);
+        _animator.SetFloat("Vertical", vertical);
 
         if (SideCalculator.Instance.Area == "C_Center")
             _inputDirection = new Vector3(horizontal, 0f, vertical);

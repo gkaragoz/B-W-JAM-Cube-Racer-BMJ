@@ -38,9 +38,9 @@ public class GameManager : Singleton<GameManager>
 
     public void StartGame()
     {
-        OnGameStart?.Invoke();
-
         Instantiate(_mapPrefab);
+        
+        OnGameStart?.Invoke();
     }
     
     public void FinishGame()

@@ -1730,6 +1730,8 @@ MonoBehaviour:
   _txtLapCount: {fileID: 1296575186}
   _txtCurrentTimeSpan: {fileID: 248384975}
   _txtPreviousBestTimeSpan: {fileID: 1384695489}
+  _txtMainMenuPreviousBestTimeSpan: {fileID: 553857305}
+  _txtPauseMenuPreviousBestTimeSpan: {fileID: 1260650116}
 --- !u!114 &310264990
 MonoBehaviour:
   m_ObjectHideFlags: 0

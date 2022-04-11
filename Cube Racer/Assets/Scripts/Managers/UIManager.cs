@@ -12,6 +12,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _txtLapCount;
     [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
     [SerializeField] private TextMeshProUGUI _txtPreviousBestTimeSpan;
+    
+    [SerializeField] private TextMeshProUGUI _txtPauseMenuPreviousBestTimeSpan;
 
     private void Start()
     {
@@ -29,6 +31,7 @@ public class UIManager : Singleton<UIManager>
         {
             _txtCurrentTimeSpan.text = TimeTracker.Instance.GetCurrentTimeSpan();
             _txtPreviousBestTimeSpan.text = TimeTracker.Instance.GetPreviousTimeSpan();
+            _txtPauseMenuPreviousBestTimeSpan.text = "PREVIOUS BEST: " + TimeTracker.Instance.GetPreviousTimeSpan();
         }
     }
 

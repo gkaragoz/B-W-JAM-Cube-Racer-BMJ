@@ -35,10 +35,6 @@ public class TimeTracker : MonoBehaviour
     private void Start()
     {
         GameManager.OnGameStart += OnGameStartedListener;
-        
-        _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMinutes);
-        _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeSeconds);
-        _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMilliseconds);
     }
 
     private void OnGameStartedListener()
@@ -53,7 +49,6 @@ public class TimeTracker : MonoBehaviour
         _startDateTime = DateTime.Now;
 
         Debug.LogWarning("Timer started.");
-        Debug.LogWarning("Previous time: " + $"{_currentMap.PreviousTimeMinutes}:{_currentMap.PreviousTimeMinutes}:{_currentMap.PreviousTimeMinutes}");
     }
 
     private void Update()
@@ -94,10 +89,6 @@ public class TimeTracker : MonoBehaviour
         var passedTimeInSeconds = GetTimeInSeconds();
         var passedTimeInMilliseconds = GetTimeInMilliseconds();
 
-        _currentMap.PreviousTimeMinutes = passedTimeInMinutes;
-        _currentMap.PreviousTimeSeconds = passedTimeInSeconds;
-        _currentMap.PreviousTimeMilliseconds = passedTimeInMilliseconds;
-
         _currentMap.CurrentTimeMinutes = passedTimeInMinutes;
         _currentMap.CurrentTimeSeconds = passedTimeInSeconds;
         _currentMap.CurrentTimeMilliseconds = passedTimeInMilliseconds;
@@ -119,7 +110,7 @@ public class TimeTracker : MonoBehaviour
 
     public string GetPreviousTimeSpan()
     {
-        return $"{_currentMap.PreviousTimeMinutes:00}:{_currentMap.PreviousTimeSeconds:00}:{_currentMap.PreviousTimeMilliseconds:00}";
+        return $"{PlayerPrefs.GetInt(PreviousTimeMinutes):00}:{PlayerPrefs.GetInt(PreviousTimeSeconds):00}:{PlayerPrefs.GetInt(PreviousTimeMilliseconds):00}";
     }
 }
 
@@ -129,10 +120,6 @@ public class MapData
     public string MapName;
     public int LapCount;
     public int CurrentLap;
-
-    public int PreviousTimeMinutes;
-    public int PreviousTimeSeconds;
-    public int PreviousTimeMilliseconds;
 
     public int CurrentTimeMinutes;
     public int CurrentTimeSeconds;

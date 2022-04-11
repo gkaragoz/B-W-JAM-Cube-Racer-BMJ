@@ -37,37 +37,32 @@ public class UIManager : Singleton<UIManager>
 
     private void ShowMainMenu()
     {
-        DOTween.To(() => mainMenu.alpha, 
-            x => mainMenu.alpha = x, 1F, 1F);
+        DOTween.To(() => mainMenu.alpha,
+            x => mainMenu.alpha = x, 1F, .5F)
+            .OnComplete(()=> mainMenu.blocksRaycasts = true);
     }
     
     public void HideMainMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => mainMenu.alpha,
-                x => mainMenu.alpha = x, 0F, .5F);
-        });
+        mainMenu.blocksRaycasts = false;
+        
+        DOTween.To(() => mainMenu.alpha,
+            x => mainMenu.alpha = x, 0F, .5F);
     }
 
     public void ShowInGameMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => inGameMenu.alpha, 
+        DOTween.To(() => inGameMenu.alpha, 
                 x => inGameMenu.alpha = x, 1F, .5F)
-                .OnComplete(() => inGameMenu.blocksRaycasts = true);
-        });
+            .OnComplete(() => inGameMenu.blocksRaycasts = true);
     }
 
     public void HideInGameMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => inGameMenu.alpha, 
-                x => inGameMenu.alpha = x, 0F, .5F)
-                .OnComplete(() => inGameMenu.blocksRaycasts = false);
-        });
+        inGameMenu.blocksRaycasts = false;
+
+        DOTween.To(() => inGameMenu.alpha,
+            x => inGameMenu.alpha = x, 0F, .5F);
     }
 
     public void ShowPauseMenu()
@@ -87,26 +82,29 @@ public class UIManager : Singleton<UIManager>
 
     public void OnClickSettings()
     {
+        mainMenu.blocksRaycasts = false;
+
         DOTween.To(() => settingsMenu.alpha, 
             x => settingsMenu.alpha = x, 1F, .5F).OnComplete(() =>
         {
-            mainMenu.blocksRaycasts = false;
             settingsMenu.blocksRaycasts = true;
         });
     }
 
     public void SettingsToMainMenu()
     {
-        DOTween.To(() => settingsMenu.alpha, 
-            x => settingsMenu.alpha = x, 0F, .5F).OnComplete(() =>
-        {
-            mainMenu.blocksRaycasts = true;
-            settingsMenu.blocksRaycasts = false;
-        });
+        settingsMenu.blocksRaycasts = false;
+
+        DOTween.To(() => settingsMenu.alpha,
+            x => settingsMenu.alpha = x, 0F, .5F);
+        
+        ShowMainMenu();
     }
 
     public void PauseToSettings()
     {
+        pauseMenu.blocksRaycasts = false;
+        
         DOTween.To(() => settingsMenu.alpha, 
             x => settingsMenu.alpha = x, 1F, .5F).OnComplete(() =>
         {

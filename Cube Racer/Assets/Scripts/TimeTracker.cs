@@ -114,12 +114,12 @@ public class TimeTracker : MonoBehaviour
     
     public string GetCurrentTimeSpan()
     {
-        return $"{_currentMap.CurrentTimeMinutes}:{_currentMap.CurrentTimeSeconds}:{_currentMap.CurrentTimeMilliseconds}";
+        return $"{_currentMap.CurrentTimeMinutes:00}:{_currentMap.CurrentTimeSeconds:00}:{_currentMap.CurrentTimeMilliseconds:00}";
     }
 
     public string GetPreviousTimeSpan()
     {
-        return $"{_currentMap.PreviousTimeMinutes}:{_currentMap.PreviousTimeSeconds}:{_currentMap.PreviousTimeMilliseconds}";
+        return $"{_currentMap.PreviousTimeMinutes:00}:{_currentMap.PreviousTimeSeconds:00}:{_currentMap.PreviousTimeMilliseconds:00}";
     }
 }
 

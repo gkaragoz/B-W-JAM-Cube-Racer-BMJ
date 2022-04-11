@@ -1,9 +1,11 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
+    [SerializeField] private CanvasGroup welcomeMenu = null;
     [SerializeField] private CanvasGroup mainMenu = null;
     [SerializeField] private CanvasGroup inGameMenu = null;
     [SerializeField] private CanvasGroup settingsMenu = null;
@@ -12,12 +14,16 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _txtLapCount;
     [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
     [SerializeField] private TextMeshProUGUI _txtPreviousBestTimeSpan;
-    
     [SerializeField] private TextMeshProUGUI _txtPauseMenuPreviousBestTimeSpan;
 
     private void Start()
     {
-        DOVirtual.DelayedCall(.1F, ShowMainMenu);
+        DOVirtual.DelayedCall(3F, () =>
+        {
+            HideWelcomeScreen();
+            
+            ShowMainMenu();
+        });
     }
 
     private void Update()
@@ -35,39 +41,46 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    private void ShowWelcomeScreen()
+    {
+        DOTween.To(() => welcomeMenu.alpha,
+            x => welcomeMenu.alpha = x, 1F, 1F);
+    }
+    
+    private void HideWelcomeScreen()
+    {
+        DOTween.To(() => welcomeMenu.alpha,
+            x => welcomeMenu.alpha = x, 0F, 1F);
+    }
+
     private void ShowMainMenu()
     {
-        DOTween.To(() => mainMenu.alpha, 
-            x => mainMenu.alpha = x, 1F, 1F);
+        DOTween.To(() => mainMenu.alpha,
+            x => mainMenu.alpha = x, 1F, .5F)
+            .OnComplete(()=> mainMenu.blocksRaycasts = true);
     }
     
     public void HideMainMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => mainMenu.alpha,
-                x => mainMenu.alpha = x, 0F, .5F);
-        });
+        mainMenu.blocksRaycasts = false;
+        
+        DOTween.To(() => mainMenu.alpha,
+            x => mainMenu.alpha = x, 0F, .5F);
     }
 
     public void ShowInGameMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => inGameMenu.alpha, 
+        DOTween.To(() => inGameMenu.alpha, 
                 x => inGameMenu.alpha = x, 1F, .5F)
-                .OnComplete(() => inGameMenu.blocksRaycasts = true);
-        });
+            .OnComplete(() => inGameMenu.blocksRaycasts = true);
     }
 
     public void HideInGameMenu()
     {
-        DOVirtual.DelayedCall(.1F, () =>
-        {
-            DOTween.To(() => inGameMenu.alpha, 
-                x => inGameMenu.alpha = x, 0F, .5F)
-                .OnComplete(() => inGameMenu.blocksRaycasts = false);
-        });
+        inGameMenu.blocksRaycasts = false;
+
+        DOTween.To(() => inGameMenu.alpha,
+            x => inGameMenu.alpha = x, 0F, .5F);
     }
 
     public void ShowPauseMenu()
@@ -87,26 +100,29 @@ public class UIManager : Singleton<UIManager>
 
     public void OnClickSettings()
     {
+        mainMenu.blocksRaycasts = false;
+
         DOTween.To(() => settingsMenu.alpha, 
             x => settingsMenu.alpha = x, 1F, .5F).OnComplete(() =>
         {
-            mainMenu.blocksRaycasts = false;
             settingsMenu.blocksRaycasts = true;
         });
     }
 
     public void SettingsToMainMenu()
     {
-        DOTween.To(() => settingsMenu.alpha, 
-            x => settingsMenu.alpha = x, 0F, .5F).OnComplete(() =>
-        {
-            mainMenu.blocksRaycasts = true;
-            settingsMenu.blocksRaycasts = false;
-        });
+        settingsMenu.blocksRaycasts = false;
+
+        DOTween.To(() => settingsMenu.alpha,
+            x => settingsMenu.alpha = x, 0F, .5F);
+        
+        ShowMainMenu();
     }
 
     public void PauseToSettings()
     {
+        pauseMenu.blocksRaycasts = false;
+        
         DOTween.To(() => settingsMenu.alpha, 
             x => settingsMenu.alpha = x, 1F, .5F).OnComplete(() =>
         {
@@ -117,5 +133,13 @@ public class UIManager : Singleton<UIManager>
     public void PauseToMainMenu()
     {
         GameManager.Instance.ReloadGame();
+    }
+
+    public void StartDirectTransition()
+    {
+        welcomeMenu.alpha = 0F;
+        welcomeMenu.blocksRaycasts = false;
+        mainMenu.alpha = 0F;
+        mainMenu.blocksRaycasts = false;
     }
 }

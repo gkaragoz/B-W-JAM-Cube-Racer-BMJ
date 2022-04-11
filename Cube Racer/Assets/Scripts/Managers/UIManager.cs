@@ -1,9 +1,11 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
+    [SerializeField] private CanvasGroup welcomeMenu = null;
     [SerializeField] private CanvasGroup mainMenu = null;
     [SerializeField] private CanvasGroup inGameMenu = null;
     [SerializeField] private CanvasGroup settingsMenu = null;
@@ -12,12 +14,16 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _txtLapCount;
     [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
     [SerializeField] private TextMeshProUGUI _txtPreviousBestTimeSpan;
-    
     [SerializeField] private TextMeshProUGUI _txtPauseMenuPreviousBestTimeSpan;
 
     private void Start()
     {
-        DOVirtual.DelayedCall(.1F, ShowMainMenu);
+        DOVirtual.DelayedCall(3F, () =>
+        {
+            HideWelcomeScreen();
+            
+            ShowMainMenu();
+        });
     }
 
     private void Update()
@@ -33,6 +39,18 @@ public class UIManager : Singleton<UIManager>
             _txtPreviousBestTimeSpan.text = TimeTracker.Instance.GetPreviousTimeSpan();
             _txtPauseMenuPreviousBestTimeSpan.text = "PREVIOUS BEST: " + TimeTracker.Instance.GetPreviousTimeSpan();
         }
+    }
+
+    private void ShowWelcomeScreen()
+    {
+        DOTween.To(() => welcomeMenu.alpha,
+            x => welcomeMenu.alpha = x, 1F, 1F);
+    }
+    
+    private void HideWelcomeScreen()
+    {
+        DOTween.To(() => welcomeMenu.alpha,
+            x => welcomeMenu.alpha = x, 0F, 1F);
     }
 
     private void ShowMainMenu()
@@ -115,5 +133,13 @@ public class UIManager : Singleton<UIManager>
     public void PauseToMainMenu()
     {
         GameManager.Instance.ReloadGame();
+    }
+
+    public void StartDirectTransition()
+    {
+        welcomeMenu.alpha = 0F;
+        welcomeMenu.blocksRaycasts = false;
+        mainMenu.alpha = 0F;
+        mainMenu.blocksRaycasts = false;
     }
 }

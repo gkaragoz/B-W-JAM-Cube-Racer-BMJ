@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -18,12 +17,24 @@ public class UIManager : Singleton<UIManager>
 
     private void Start()
     {
-        DOVirtual.DelayedCall(3F, () =>
+        if (PlayerPrefs.HasKey("restart"))
         {
-            HideWelcomeScreen();
+            PlayerPrefs.DeleteKey("restart");
             
-            ShowMainMenu();
-        });
+            StartDirectTransition();
+            
+            GameManager.Instance.StartGame();
+        }
+
+        else
+        {
+            DOVirtual.DelayedCall(2F, () =>
+            {
+                HideWelcomeScreen();
+            
+                ShowMainMenu();
+            });
+        }
     }
 
     private void Update()
@@ -141,5 +152,6 @@ public class UIManager : Singleton<UIManager>
         welcomeMenu.blocksRaycasts = false;
         mainMenu.alpha = 0F;
         mainMenu.blocksRaycasts = false;
+        ShowInGameMenu();
     }
 }

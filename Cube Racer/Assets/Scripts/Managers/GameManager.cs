@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     public static Action<float> OnVolumeChange;
 
     [SerializeField] private GameObject _mapPrefab;
-    
+
     public void StartGame()
     {
         Instantiate(_mapPrefab);

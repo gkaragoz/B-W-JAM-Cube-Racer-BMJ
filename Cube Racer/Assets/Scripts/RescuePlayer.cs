@@ -4,11 +4,9 @@ public class RescuePlayer : MonoBehaviour
 {
     public void Rescue()
     {
-        GameManager.Instance.ReloadGame();
+        PlayerPrefs.SetInt("restart", 0);
         
-        // Skip Welcome Screen
-        // Skip MainMenu Screen
-        // Open InGameUI.
+        GameManager.Instance.ReloadGame();
     }
 
     private void Update()

@@ -18,24 +18,6 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject _mapPrefab;
     
-    #region Singleton
-
-    private static GameManager _instance;
-
-    public static GameManager Instance
-    {
-        get => _instance;
-        set => _instance = value;
-    }
-
-    private void Awake()
-    {
-        if (Instance == null)
-            _instance = this;
-    }
-
-    #endregion
-
     public void StartGame()
     {
         Instantiate(_mapPrefab);

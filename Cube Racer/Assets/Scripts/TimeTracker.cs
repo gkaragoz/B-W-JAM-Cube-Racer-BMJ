@@ -33,8 +33,6 @@ public class TimeTracker : MonoBehaviour
 
     private void Start()
     {
-        StartTimer();
-
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMinutes);
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeSeconds);
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMilliseconds);

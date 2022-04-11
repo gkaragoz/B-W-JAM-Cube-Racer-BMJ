@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Connection
+  - Side
+  - StartFinshArea
   layers:
   - Default
   - TransparentFX

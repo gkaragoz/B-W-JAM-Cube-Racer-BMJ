@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform _cubeTransform;
 
     [SerializeField] private float _movementSpeed = 1f;
-    [SerializeField] private float _acceleration = 2f;
     [SerializeField] private Rigidbody _rb = null;
 
     [SerializeField] private float _maxSpeed = 5f;

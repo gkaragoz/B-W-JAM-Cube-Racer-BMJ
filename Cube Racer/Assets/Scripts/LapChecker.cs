@@ -26,12 +26,15 @@ public class LapChecker : MonoBehaviour
     }
 
     [SerializeField] private int _lapCount = 0;
+    [SerializeField] private int _currentLap = 1;
 
     [Header("AutoFill in Gameplay")]
     [SerializeField] private List<string> _lapCheckpointSides = new List<string>();
 
     private void Start()
     {
+        _currentLap = 1;
+
         SetAllCheckpoints();
     }
 
@@ -58,9 +61,9 @@ public class LapChecker : MonoBehaviour
     {
         Debug.LogWarning("Lap Completed");
 
-        _lapCount--;
+        _currentLap++;
 
-        if (_lapCount <= 0)
+        if (_currentLap == _lapCount + 1)
         {
             Debug.LogWarning("Level Finished");
         }

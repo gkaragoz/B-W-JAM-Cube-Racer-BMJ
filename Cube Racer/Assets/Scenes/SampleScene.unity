@@ -1415,6 +1415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lapCount: 3
+  _currentLap: 1
   _lapCheckpointSides: []
 --- !u!1 &1796087489
 GameObject:

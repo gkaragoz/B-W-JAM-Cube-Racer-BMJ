@@ -1,15 +1,35 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private CanvasGroup mainMenu = null;
+    [SerializeField] private CanvasGroup inGameMenu = null;
     [SerializeField] private CanvasGroup settingsMenu = null;
     [SerializeField] private CanvasGroup pauseMenu = null;
+    
+    [SerializeField] private TextMeshProUGUI _txtLapCount;
+    [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
+    [SerializeField] private TextMeshProUGUI _txtPreviousBestTimeSpan;
 
     private void Start()
     {
         DOVirtual.DelayedCall(.1F, ShowMainMenu);
+    }
+
+    private void Update()
+    {
+        if (LapChecker.Instance != null)
+        {
+            _txtLapCount.text = LapChecker.Instance.ToString();
+        }
+
+        if (TimeTracker.Instance != null)
+        {
+            _txtCurrentTimeSpan.text = TimeTracker.Instance.GetCurrentTimeSpan();
+            _txtPreviousBestTimeSpan.text = TimeTracker.Instance.GetPreviousTimeSpan();
+        }
     }
 
     private void ShowMainMenu()
@@ -22,8 +42,28 @@ public class UIManager : Singleton<UIManager>
     {
         DOVirtual.DelayedCall(.1F, () =>
         {
-            DOTween.To(() => mainMenu.alpha, 
+            DOTween.To(() => mainMenu.alpha,
                 x => mainMenu.alpha = x, 0F, .5F);
+        });
+    }
+
+    public void ShowInGameMenu()
+    {
+        DOVirtual.DelayedCall(.1F, () =>
+        {
+            DOTween.To(() => inGameMenu.alpha, 
+                x => inGameMenu.alpha = x, 1F, .5F)
+                .OnComplete(() => inGameMenu.blocksRaycasts = true);
+        });
+    }
+
+    public void HideInGameMenu()
+    {
+        DOVirtual.DelayedCall(.1F, () =>
+        {
+            DOTween.To(() => inGameMenu.alpha, 
+                x => inGameMenu.alpha = x, 0F, .5F)
+                .OnComplete(() => inGameMenu.blocksRaycasts = false);
         });
     }
 
@@ -73,6 +113,6 @@ public class UIManager : Singleton<UIManager>
 
     public void PauseToMainMenu()
     {
-        GameManager.OnGameReload?.Invoke();
+        GameManager.Instance.ReloadGame();
     }
 }

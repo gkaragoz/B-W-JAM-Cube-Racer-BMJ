@@ -26,23 +26,31 @@ public class LapChecker : MonoBehaviour
     }
 
     [SerializeField] private int _lapCount = 0;
-    [SerializeField] private int _currentLap = 1;
+    [SerializeField] private int _currentLap = 0;
 
     [Header("AutoFill in Gameplay")]
     [SerializeField] private List<string> _lapCheckpointSides = new List<string>();
 
     private void Start()
     {
-        _currentLap = 1;
+        _currentLap = 0;
 
         SetAllCheckpoints();
     }
 
     private void Update()
     {
+        if (SideCalculator.Instance == null)
+            return;
+        
         var playerCurrentSide = SideCalculator.Instance.Area;
 
         PassASide(playerCurrentSide);
+    }
+
+    public override string ToString()
+    {
+        return $"LAP {_currentLap}/{_lapCount}";
     }
 
     public void SetAllCheckpoints()
@@ -63,8 +71,9 @@ public class LapChecker : MonoBehaviour
 
         _currentLap++;
 
-        if (_currentLap == _lapCount + 1)
+        if (_currentLap == _lapCount)
         {
+            TimeTracker.Instance.FinishTimer();
             Debug.LogWarning("Level Finished");
         }
         else

@@ -24,6 +24,7 @@ public class TimeTracker : MonoBehaviour
     }
 
     [SerializeField] private MapData _currentMap;
+    private bool _isStarted = false;
 
     private DateTime _startDateTime;
 
@@ -33,14 +34,22 @@ public class TimeTracker : MonoBehaviour
 
     private void Start()
     {
+        GameManager.OnGameStart += OnGameStartedListener;
+        
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMinutes);
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeSeconds);
         _currentMap.PreviousTimeMinutes = PlayerPrefs.GetInt(PreviousTimeMilliseconds);
     }
 
+    private void OnGameStartedListener()
+    {
+        StartTimer();
+    }
+
     [ContextMenu("Start Timer")]
     public void StartTimer()
     {
+        _isStarted = true;
         _startDateTime = DateTime.Now;
 
         Debug.LogWarning("Timer started.");
@@ -49,6 +58,9 @@ public class TimeTracker : MonoBehaviour
 
     private void Update()
     {
+        if (!_isStarted)
+            return;
+        
         var passedTimeInMinutes = GetTimeInMinutes();
         var passedTimeInSeconds = GetTimeInSeconds();
         var passedTimeInMilliseconds = GetTimeInMilliseconds();
@@ -76,6 +88,8 @@ public class TimeTracker : MonoBehaviour
     [ContextMenu("Finish Timer")]
     public void FinishTimer()
     {
+        _isStarted = false;
+        
         var passedTimeInMinutes = GetTimeInMinutes();
         var passedTimeInSeconds = GetTimeInSeconds();
         var passedTimeInMilliseconds = GetTimeInMilliseconds();
@@ -94,6 +108,18 @@ public class TimeTracker : MonoBehaviour
 
         Debug.LogWarning("Timer finished");
         Debug.LogWarning($"{passedTimeInMinutes}:{passedTimeInSeconds}:{passedTimeInMilliseconds}");
+
+        GameManager.Instance.FinishGame();
+    }
+    
+    public string GetCurrentTimeSpan()
+    {
+        return $"{_currentMap.CurrentTimeMinutes}:{_currentMap.CurrentTimeSeconds}:{_currentMap.CurrentTimeMilliseconds}";
+    }
+
+    public string GetPreviousTimeSpan()
+    {
+        return $"{_currentMap.PreviousTimeMinutes}:{_currentMap.PreviousTimeSeconds}:{_currentMap.PreviousTimeMilliseconds}";
     }
 }
 

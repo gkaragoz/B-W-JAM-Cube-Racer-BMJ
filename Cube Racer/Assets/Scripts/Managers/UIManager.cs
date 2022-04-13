@@ -10,11 +10,14 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private CanvasGroup settingsMenu = null;
     [SerializeField] private CanvasGroup pauseMenu = null;
     [SerializeField] private CanvasGroup keyBindingsMenu = null;
+    [SerializeField] private CanvasGroup levelCompleteMenu = null;
     
     [SerializeField] private TextMeshProUGUI _txtLapCount;
     [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
     [SerializeField] private TextMeshProUGUI _txtPreviousBestTimeSpan;
-    [SerializeField] private TextMeshProUGUI _txtPauseMenuPreviousBestTimeSpan;
+    [SerializeField] private TextMeshProUGUI _txtPauseMenuPreviousBestTimeSpan;    
+    [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpanForLevelComplete;
+    [SerializeField] private TextMeshProUGUI _txtPreviousBestSpanForLevelComplete;
 
     private void Start()
     {
@@ -25,6 +28,8 @@ public class UIManager : Singleton<UIManager>
             StartDirectTransition();
             
             GameManager.Instance.StartGame();
+
+            TimeTracker.Instance.OnGameStartedListener();
         }
 
         else
@@ -50,9 +55,24 @@ public class UIManager : Singleton<UIManager>
             _txtCurrentTimeSpan.text = TimeTracker.Instance.GetCurrentTimeSpan();
             _txtPreviousBestTimeSpan.text = TimeTracker.Instance.GetPreviousTimeSpan();
             _txtPauseMenuPreviousBestTimeSpan.text = "PREVIOUS BEST: " + TimeTracker.Instance.GetPreviousTimeSpan();
+            _txtCurrentTimeSpanForLevelComplete.text = TimeTracker.Instance.GetCurrentTimeSpan();
+            _txtPreviousBestSpanForLevelComplete.text = "PREVIOUS BEST: " + TimeTracker.Instance.GetPreviousTimeSpan();
         }
     }
 
+    public void ShowCompleteScreen()
+    {
+        DOTween.To(() => levelCompleteMenu.alpha,
+            x => levelCompleteMenu.alpha = x, 1F, .5F)
+            .OnComplete(()=> levelCompleteMenu.blocksRaycasts = true);
+    }
+
+    public void HideCompleteScreen()
+    {
+        DOTween.To(() => levelCompleteMenu.alpha,
+            x => levelCompleteMenu.alpha = x, 0F, .5F);
+    }
+    
     private void ShowWelcomeScreen()
     {
         DOTween.To(() => welcomeMenu.alpha,

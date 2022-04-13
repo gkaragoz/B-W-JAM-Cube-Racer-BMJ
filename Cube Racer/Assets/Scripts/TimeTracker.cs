@@ -42,7 +42,7 @@ public class TimeTracker : MonoBehaviour
         GameManager.OnGameStart -= OnGameStartedListener;
     }
 
-    private void OnGameStartedListener()
+    public void OnGameStartedListener()
     {
         StartTimer();
     }

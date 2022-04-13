@@ -76,6 +76,7 @@ public class LapChecker : MonoBehaviour
             TimeTracker.Instance.FinishTimer();
             Debug.LogWarning("Level Finished");
             SoundManager.Instance.PlayCompleteSFX();
+            UIManager.Instance.ShowCompleteScreen();
         }
         else
         {

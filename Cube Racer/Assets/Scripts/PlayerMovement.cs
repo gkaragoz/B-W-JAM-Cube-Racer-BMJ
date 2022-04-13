@@ -1,3 +1,4 @@
+using System;
 using MVC.Base.Runtime.Extensions;
 using UnityEngine;
 
@@ -20,8 +21,12 @@ public class PlayerMovement : MonoBehaviour
     private Quaternion _targetCubeRotation;
     private Vector3 _inputDirection;
 
+    private bool _canMove = true;
+
     private void Update()
     {
+        if(!_canMove) return;
+        
         // Input
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
@@ -203,4 +208,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void StopMovement()
+    {
+        _canMove = false;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnGameFinished += StopMovement;
+    }
+    
+    private void OnDisable()
+    {
+        GameManager.OnGameFinished -= StopMovement;
+    }
 }

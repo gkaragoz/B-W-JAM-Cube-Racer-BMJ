@@ -18,9 +18,12 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject _mapPrefab;
 
+    private GameObject _mapInstance = null;
+    
     public void StartGame()
     {
-        Instantiate(_mapPrefab);
+        if(_mapInstance == null)
+            _mapInstance = Instantiate(_mapPrefab);
         
         OnGameStart?.Invoke();
     }

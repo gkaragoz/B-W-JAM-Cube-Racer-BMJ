@@ -85,6 +85,8 @@ public class UIManager : Singleton<UIManager>
         DOTween.To(() => inGameMenu.alpha, 
                 x => inGameMenu.alpha = x, 1F, .5F)
             .OnComplete(() => inGameMenu.blocksRaycasts = true);
+        
+        SoundManager.Instance.PlayRandomRaceSFX();
     }
 
     public void HideInGameMenu()
@@ -100,6 +102,8 @@ public class UIManager : Singleton<UIManager>
         DOTween.To(() => pauseMenu.alpha, 
                 x => pauseMenu.alpha = x, 1F, .5F).
             OnComplete(()=> pauseMenu.blocksRaycasts = true);
+        
+        SoundManager.Instance.PlayMenuSFX();
     }
 
     public void HidePauseMenu()

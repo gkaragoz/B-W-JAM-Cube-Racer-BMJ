@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VolumeController : MonoBehaviour
+public class VolumeController : Singleton<VolumeController>
 {
     [SerializeField] private Sprite Mute = null;
     [SerializeField] private Sprite LowVolume = null;
@@ -14,6 +14,16 @@ public class VolumeController : MonoBehaviour
     private void Awake()
     {
         _target = GetComponent<Image>();
+    }
+
+    private void Start()
+    {
+        ValidateVolume();
+    }
+
+    public float GetVolume()
+    {
+        return slider.value;
     }
 
     public void Update()

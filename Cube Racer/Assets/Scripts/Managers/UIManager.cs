@@ -9,6 +9,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private CanvasGroup inGameMenu = null;
     [SerializeField] private CanvasGroup settingsMenu = null;
     [SerializeField] private CanvasGroup pauseMenu = null;
+    [SerializeField] private CanvasGroup keyBindingsMenu = null;
     
     [SerializeField] private TextMeshProUGUI _txtLapCount;
     [SerializeField] private TextMeshProUGUI _txtCurrentTimeSpan;
@@ -146,6 +147,21 @@ public class UIManager : Singleton<UIManager>
         GameManager.Instance.ReloadGame();
     }
 
+    public void ShowKeyBindingsMenu()
+    {
+        DOTween.To(() => keyBindingsMenu.alpha, 
+                x => keyBindingsMenu.alpha = x, 1F, .5F).
+            OnComplete(()=> keyBindingsMenu.blocksRaycasts = true);
+    }
+
+    public void HideKeyBindingsMenu()
+    {
+        keyBindingsMenu.blocksRaycasts = false;
+
+        DOTween.To(() => keyBindingsMenu.alpha,
+            x => keyBindingsMenu.alpha = x, 0F, .5F);
+    }
+    
     public void StartDirectTransition()
     {
         welcomeMenu.alpha = 0F;
